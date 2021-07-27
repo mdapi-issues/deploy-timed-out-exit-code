@@ -1,0 +1,44 @@
+name: Test and Release
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  default:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 12
+      - name: Install dependencies
+        run: yarn install
+      - name: Authenticate DevHub and create scratch org
+        env:
+          SFDX_AUTH_URL_DEVHUB: ${{ secrets.SFDX_AUTH_URL_DEVHUB }}
+        run: |
+          npx sfdx-plugin-auth-url auth-url:import -d -a devhub "${SFDX_AUTH_URL_DEVHUB}"
+          yarn develop
+      - name: Run reproduction
+        run: |
+          npx sfdx force:source:deploy --sourcepath force-app --checkonly --wait 1
+          sourceDeployExitCode=$?
+          echo "exit code was: ${sourceDeployExitCode}"
+          npx sfdx force:source:deploy:report --json --wait 1
+          sourceDeployReportExitCode=$?
+          echo "exit code was: ${sourceDeployReportExitCode}"
+          npx sfdx force:mdapi:deploy --deploydir mdapi --checkonly --wait 1
+          mdapiDeployExitCode=$?
+          echo "exit code was: ${mdapiDeployExitCode}"
+          if [[ "${sourceDeployExitCode}" == "0" && "${sourceDeployReportExitCode}" == "0" && "${mdapiDeployExitCode}" == "0" ]]; then echo "Reproduction of the issue complete. Exit codes were all successful although they should all have been non-zero."; exit 1; fi
+      - name: Delete scratch org
+        if: always()
+        run: |
+          npx sfdx force:org:delete -p
