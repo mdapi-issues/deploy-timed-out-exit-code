@@ -26,20 +26,12 @@ jobs:
         run: |
           npx sfdx-plugin-auth-url auth-url:import -d -a devhub "${SFDX_AUTH_URL_DEVHUB}"
           yarn develop
-      - name: Run reproduction
-        run: |
-          set -x # print commands before execution
-          set +e # don't exit this test on errors
-          npx sfdx force:source:deploy --sourcepath force-app --checkonly --wait 1
-          sourceDeployExitCode=$?
-          echo "exit code was: ${sourceDeployExitCode}"
-          npx sfdx force:source:deploy:report --json --wait 1
-          sourceDeployReportExitCode=$?
-          echo "exit code was: ${sourceDeployReportExitCode}"
-          npx sfdx force:mdapi:deploy --deploydir mdapi --checkonly --wait 1
-          mdapiDeployExitCode=$?
-          echo "exit code was: ${mdapiDeployExitCode}"
-          if [[ "${sourceDeployExitCode}" == "0" || "${sourceDeployReportExitCode}" == "0" || "${mdapiDeployExitCode}" == "0" ]]; then echo "Reproduction of the issue complete. At least one exit code was successful although it should have been non-zero."; exit 1; fi
+      - name: Test source command
+        run: yarn test:source
+      - name: Test workaround
+        run: yarn test:workaround
+      - name: Test mdapi command
+        run: yarn test:mdapi
       - name: Delete scratch org
         if: always()
         run: |

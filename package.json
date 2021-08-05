@@ -5,7 +5,10 @@
   "author": "Matthias Rolke <mr.amtrack@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "develop": "sfdx force:org:create -f config/project-scratch-def.json -s"
+    "develop": "sfdx force:org:create -f config/project-scratch-def.json -s",
+    "test:mdapi": "bash test-mdapi.sh",
+    "test:source": "bash test-source.sh",
+    "test:workaround": "bash test-workaround.sh"
   },
   "devDependencies": {
     "sfdx-cli": "7.112.0"
