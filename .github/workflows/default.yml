@@ -28,6 +28,7 @@ jobs:
           yarn develop
       - name: Run reproduction
         run: |
+          set +e # don't exit this test on errors
           npx sfdx force:source:deploy --sourcepath force-app --checkonly --wait 1
           sourceDeployExitCode=$?
           echo "exit code was: ${sourceDeployExitCode}"
@@ -37,7 +38,7 @@ jobs:
           npx sfdx force:mdapi:deploy --deploydir mdapi --checkonly --wait 1
           mdapiDeployExitCode=$?
           echo "exit code was: ${mdapiDeployExitCode}"
-          if [[ "${sourceDeployExitCode}" == "0" && "${sourceDeployReportExitCode}" == "0" && "${mdapiDeployExitCode}" == "0" ]]; then echo "Reproduction of the issue complete. Exit codes were all successful although they should all have been non-zero."; exit 1; fi
+          if [[ "${sourceDeployExitCode}" == "0" || "${sourceDeployReportExitCode}" == "0" || "${mdapiDeployExitCode}" == "0" ]]; then echo "Reproduction of the issue complete. At least one exit code was successful although it should have been non-zero."; exit 1; fi
       - name: Delete scratch org
         if: always()
         run: |
