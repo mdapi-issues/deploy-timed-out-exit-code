@@ -28,6 +28,7 @@ jobs:
           yarn develop
       - name: Run reproduction
         run: |
+          set -x # print commands before execution
           set +e # don't exit this test on errors
           npx sfdx force:source:deploy --sourcepath force-app --checkonly --wait 1
           sourceDeployExitCode=$?
