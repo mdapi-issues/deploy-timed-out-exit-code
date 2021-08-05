@@ -8,6 +8,6 @@
     "develop": "sfdx force:org:create -f config/project-scratch-def.json -s"
   },
   "devDependencies": {
-    "sfdx-cli": "7.110.0"
+    "sfdx-cli": "7.112.0"
   }
 }
