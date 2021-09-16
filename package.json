@@ -11,6 +11,6 @@
     "test:workaround": "bash test-workaround.sh"
   },
   "devDependencies": {
-    "sfdx-cli": "7.117.0"
+    "sfdx-cli": "7.118.1"
   }
 }
