@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-set +e # don't exit this test if a command fails
-
 tmpDir="$(mktemp -d)"
 npx sfdx force:source:convert -r force-app -d "${tmpDir}"
 
@@ -15,7 +13,4 @@ sfdx force:mdapi:deploy:report --wait 1
 mdapiDeployReportExitCode=$?
 echo -e "exit code was: ${mdapiDeployReportExitCode}\n"
 
-if [[ "${mdapiDeployExitCode}" == "0" || "${mdapiDeployReportExitCode}" == "0" ]]; then
-    echo "the deployment timed out but the command exited with 0"
-    exit 1
-fi
+echo "MWE: Neither command failed with an error but both actually should fail"

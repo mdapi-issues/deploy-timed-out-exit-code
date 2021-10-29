@@ -14,6 +14,7 @@ workaroundExitCode=$?
 echo -e "exit code was: ${workaroundExitCode}\n"
 
 if [[ "${workaroundExitCode}" == "0" ]]; then
-    echo "the deployment timed out but the command exited with 0"
+    echo "The workaround doesn't seem to work"
     exit 1
 fi
+echo "The workaround works as expected"

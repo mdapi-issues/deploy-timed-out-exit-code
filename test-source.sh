@@ -13,6 +13,7 @@ sourceDeployReportExitCode=$?
 echo -e "exit code was: ${sourceDeployReportExitCode}\n"
 
 if [[ "${sourceDeployExitCode}" == "0" || "${sourceDeployReportExitCode}" == "0" ]]; then
-    echo "the deployment timed out but the command exited with 0"
+    echo "The deployment timed out and at least one command didn't fail as expected"
     exit 1
 fi
+echo "The deployment timed out and the commands both failed as expected"

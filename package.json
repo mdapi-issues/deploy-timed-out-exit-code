@@ -6,6 +6,7 @@
   "license": "MIT",
   "scripts": {
     "develop": "sfdx force:org:create -f config/project-scratch-def.json -s",
+    "test:e2e": "yarn test:mdapi && yarn test:source && yarn test:workaround",
     "test:mdapi": "bash test-mdapi.sh",
     "test:source": "bash test-source.sh",
     "test:workaround": "bash test-workaround.sh"

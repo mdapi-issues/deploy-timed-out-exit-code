@@ -26,12 +26,8 @@ jobs:
         run: |
           npx sfdx-plugin-auth-url auth-url:import -d -a devhub "${SFDX_AUTH_URL_DEVHUB}"
           yarn develop
-      - name: Test source command
-        run: yarn test:source
-      - name: Test workaround
-        run: yarn test:workaround
-      - name: Test mdapi command
-        run: yarn test:mdapi
+      - name: Test E2E
+        run: yarn test:e2e
       - name: Delete scratch org
         if: always()
         run: |
